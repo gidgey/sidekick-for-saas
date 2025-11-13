@@ -51,5 +51,5 @@ You’re ready to go.
 
 ---
 
-## 📁 Project Structure
+
 
