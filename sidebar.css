@@ -1,0 +1,141 @@
+:root {
+  --color-mango: #ffbe08;
+  --color-orange: #e27737;
+  --color-pinkred: #c6342f;
+  --color-smokey: #1c110a;
+  --color-banana: #ffe6a7;
+  --color-heading-brown: #4d1818;
+}
+
+/* Sidebar container */
+#sidekick-sidebar {
+  position: fixed;
+  top: 10%;
+  right: 0;
+  width: 280px;
+  max-height: 80%;
+  background: #ffffff;
+  border-left: 2px solid var(--color-banana);
+  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.12);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  z-index: 999999;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+.sidekick-header {
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--color-banana);
+  background: var(--color-mango);
+  color: var(--color-smokey);
+}
+
+.sidekick-title {
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--color-heading-brown);
+}
+
+/* Body */
+.sidekick-body {
+  padding: 8px 10px 10px;
+  overflow-y: auto;
+  background: #fff;
+}
+
+.sidekick-instructions {
+  font-size: 12px;
+  color: var(--color-smokey);
+  margin-bottom: 8px;
+}
+
+/* Textarea */
+#sidekick-post-input {
+  width: 100%;
+  min-height: 80px;
+  font-size: 12px;
+  padding: 6px;
+  margin-bottom: 6px;
+  border-radius: 6px;
+  border: 1px solid var(--color-banana);
+  resize: vertical;
+}
+
+/* Buttons */
+#sidekick-use-selection,
+#sidekick-generate {
+  width: 100%;
+  font-size: 12px;
+  padding: 7px;
+  margin-bottom: 6px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+}
+
+/* Secondary button */
+#sidekick-use-selection {
+  background: #ffffff;
+  border: 1px solid var(--color-orange);
+  color: var(--color-orange);
+}
+
+/* Primary button */
+#sidekick-generate {
+  background: var(--color-mango);
+  color: var(--color-smokey);
+  font-weight: 600;
+}
+
+#sidekick-generate:hover {
+  filter: brightness(0.95);
+}
+
+#sidekick-status {
+  font-size: 11px;
+  color: var(--color-smokey);
+  margin-bottom: 6px;
+}
+
+/* Results */
+#sidekick-results {
+  font-size: 12px;
+}
+
+/* Comment card */
+.sidekick-comment {
+  border: 1px solid var(--color-banana);
+  border-radius: 6px;
+  padding: 6px;
+  margin-bottom: 6px;
+  background: #fffdf6;
+}
+
+.sidekick-comment-index {
+  font-weight: 600;
+  font-size: 11px;
+  color: var(--color-heading-brown);
+  margin-bottom: 4px;
+}
+
+.sidekick-comment-text {
+  font-size: 12px;
+  margin-bottom: 4px;
+  color: var(--color-smokey);
+}
+
+/* Copy button */
+.sidekick-copy-btn {
+  font-size: 11px;
+  padding: 4px 8px;
+  border: none;
+  border-radius: 999px;
+  background: var(--color-pinkred);
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.sidekick-copy-btn:hover {
+  filter: brightness(0.95);
+}

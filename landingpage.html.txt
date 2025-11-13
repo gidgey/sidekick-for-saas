@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<h2>Sidekick for SaaS</h2>
+<p style="font-size:12px; color:#4D1818;"><em>For When You Really Just Need a Bridget.</em></p>
+
+<link rel="stylesheet" href="styles.css">
+<style>
+  body {
+    font-family: system-ui, sans-serif;
+    margin: 0;
+    background: #FFE6A7;
+    color: #1C110A;
+  }
+  header {
+    padding: 40px 20px;
+    text-align: center;
+  }
+  h1 {
+    color: #4D1818;
+    font-size: 48px;
+  }
+  h2 {
+    color: #4D1818;
+  }
+  .cta {
+    background: #FFBE08;
+    color: #1C110A;
+    padding: 16px 32px;
+    border-radius: 999px;
+    font-size: 20px;
+    text-decoration: none;
+    display: inline-block;
+    font-weight: bold;
+  }
+  .section {
+    padding: 80px 20px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .feature {
+    margin-bottom: 40px;
+  }
+  .feature h3 {
+    color: #E27737;
+  }
+  footer {
+    padding: 40px;
+    text-align: center;
+    font-size: 14px;
+    color: #4D1818;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Sidekick for SaaS</h1>
+  <p>Turn smart comments into warm leads.</p>
+  <a href="#" class="cta">Add to Chrome</a>
+</header>
+
+<section class="section">
+  <h2>Why Sidekick?</h2>
+
+  <div class="feature">
+    <h3>Write Comments That Get Noticed</h3>
+    <p>Highlight a post on X or LinkedIn and instantly get 2–4 thoughtful,
+    authentic comments in your voice.</p>
+  </div>
+
+  <div class="feature">
+    <h3>Your Brand. Your Tone.</h3>
+    <p>Choose from helpful, bold, witty, or expert tones — or create your own
+    custom voice profile.</p>
+  </div>
+
+  <div class="feature">
+    <h3>Comment Consistency Without the Burnout</h3>
+    <p>Grow your visibility with far less effort. Show up in the feeds of SaaS
+    founders every day.</p>
+  </div>
+</section>
+
+<section class="section">
+  <h2>How It Works</h2>
+  <p>Sidekick runs in your sidebar on X and LinkedIn. Highlight a post, click
+  “Generate Comments,” and you’re done.</p>
+</section>
+
+<footer>
+  Sidekick for SaaS — Built with ❤ by Bridget Willard
+</footer>
+
+</body>
+</html>

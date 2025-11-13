@@ -1,0 +1,9 @@
+sidekick-for-saas/
+├─ manifest.json
+├─ background.js
+├─ contentScript.js
+├─ sidebar.css
+├─ popup.html
+├─ popup.js
+├─ options.html
+└─ options.js
