@@ -2,10 +2,11 @@
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>Sidekick for SaaS – Options</title>
+    <title>Sidekick for SaaS – Settings</title>
     <style>
       body {
-        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
         padding: 16px;
         max-width: 600px;
       }
@@ -16,7 +17,8 @@
       }
       input[type="text"],
       input[type="password"],
-      textarea {
+      textarea,
+      select {
         width: 100%;
         padding: 6px;
         margin-top: 4px;
@@ -27,44 +29,66 @@
         padding: 8px 14px;
         font-size: 14px;
       }
-      #status {
+      #status,
+      #testStatus {
         margin-top: 8px;
         font-size: 13px;
+      }
+      #status {
         color: #16a34a;
+      }
+      #testStatus.success {
+        color: #16a34a;
+      }
+      #testStatus.error {
+        color: #b91c1c;
       }
       small {
         color: #6b7280;
+      }
+      .button-row {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
       }
     </style>
   </head>
   <body>
     <h1>Sidekick for SaaS – Settings</h1>
-
+ 
     <label>
       OpenAI API Key
       <input type="password" id="apiKey" placeholder="sk-..." />
       <small>Stored locally via chrome.storage.sync.</small>
     </label>
-
+ 
     <label>
       Model
-      <input type="text" id="model" value="gpt-4.1-mini" />
-      <small>Example: gpt-4.1-mini, gpt-4.1, etc.</small>
+      <select id="model">
+        <option value="gpt-4o-mini">gpt-4o-mini (fast, cost effective)</option>
+        <option value="gpt-4o">gpt-4o (higher quality)</option>
+      </select>
+      <small>Select a model you have access to in your OpenAI account.</small>
     </label>
-
+ 
     <label>
       Tone description
       <textarea id="tone" rows="3">helpful, practical, slightly witty, focused on SaaS founders</textarea>
     </label>
-
+ 
     <label>
       Number of comment options
       <input type="text" id="count" value="3" />
     </label>
-
-    <button id="save">Save</button>
+ 
+    <div class="button-row">
+      <button id="save">Save</button>
+      <button id="testConnection" type="button">Test connection</button>
+    </div>
+ 
     <div id="status"></div>
-
+    <div id="testStatus"></div>
+ 
     <script src="options.js"></script>
   </body>
 </html>

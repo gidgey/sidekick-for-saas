@@ -56,15 +56,22 @@
       setStatus("Generating comments...");
       setResults("");
 
-      chrome.runtime.sendMessage(
-        { type: "GENERATE_COMMENTS", postText: text },
-        (response) => {
-         if (!response || !response.success) {
-  const msg = response?.error || "Unknown error calling API.";
-  setStatus(msg);
-  console.error(msg);
-  return;
-}
+chrome.runtime.sendMessage(
+  { type: "GENERATE_COMMENTS", postText: text },
+  (response) => {
+    if (!response || !response.success) {
+      const raw = response?.error || "Unknown error calling API.";
+      const friendly = makeFriendlyError(raw);
+      setStatus(friendly);
+      console.error("Sidekick error:", raw);
+      return;
+    }
+
+    setStatus("Comments generated.");
+    renderComments(response.comments || []);
+  }
+);
+
 
           setStatus("Comments generated.");
           renderComments(response.comments || []);
@@ -124,6 +131,34 @@
         .replace(/>/g, "&gt;");
     }
   }
+
+function makeFriendlyError(raw) {
+  const lower = String(raw).toLowerCase();
+
+  // Billing / quota issues
+  if (lower.includes("insufficient_quota") || lower.includes("you exceeded your current quota")) {
+    return "You’ve run out of OpenAI credits or hit your quota. Please check your OpenAI billing, add credit, then try again.";
+  }
+
+  // Missing / invalid model
+  if (lower.includes("model_not_found") || lower.includes("does not exist or you do not have access")) {
+    return "The selected model is not available on your OpenAI account. Try switching to gpt-4o-mini in the extension settings.";
+  }
+
+  // No API key
+  if (lower.includes("no api key set")) {
+    return "No OpenAI API key is set. Open the Sidekick for SaaS options page and add your API key.";
+  }
+
+  // Network
+  if (lower.includes("network error")) {
+    return "Network error calling OpenAI. Check your internet connection and try again.";
+  }
+
+  // Fallback: show raw error for debugging
+  return raw;
+}
+
 
   function getSelectedPostText() {
     const selection = window.getSelection();
