@@ -23,7 +23,7 @@ async function handleGenerateComments(postText) {
 
   const tone = config.tone || "helpful, friendly, SaaS-savvy";
   const count = config.count || 3;
-  const model = config.model || "gpt-4.1-mini";
+  const model = config.model || "gpt-4o-mini";
 
   const prompt = `
 You are helping a SaaS marketing consultant write thoughtful, concise comments on social posts by SaaS founders.
@@ -64,7 +64,8 @@ Return ONLY the comments, numbered.
   if (!response.ok) {
     const text = await response.text();
     console.error("OpenAI API error:", text);
-    throw new Error("LLM API call failed. Check your API key and model.");
+    // Pass the actual error text up so we can display it
+    throw new Error(`OpenAI API error: ${text}`);
   }
 
   const data = await response.json();
@@ -74,7 +75,6 @@ Return ONLY the comments, numbered.
     .map((line) => line.trim())
     .filter((line) => line);
 
-  // Clean up numbering like "1. ..." → just the text
   const comments = lines
     .map((line) => line.replace(/^\d+[\).\s-]*/,"").trim())
     .filter((line) => line.length > 0)

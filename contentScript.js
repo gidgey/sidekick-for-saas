@@ -59,11 +59,12 @@
       chrome.runtime.sendMessage(
         { type: "GENERATE_COMMENTS", postText: text },
         (response) => {
-          if (!response || !response.success) {
-            setStatus("Error generating comments. Check console and API key.");
-            console.error(response?.error);
-            return;
-          }
+         if (!response || !response.success) {
+  const msg = response?.error || "Unknown error calling API.";
+  setStatus(msg);
+  console.error(msg);
+  return;
+}
 
           setStatus("Comments generated.");
           renderComments(response.comments || []);
