@@ -1,14 +1,15 @@
+// background.js (service worker)
+
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type === "GENERATE_COMMENTS") {
-    handleGenerateComments(message.postText)
+    handleGenerateComments(message.postText, !!message.bridgetMode)
       .then((result) => sendResponse({ success: true, comments: result }))
       .catch((err) => {
         console.error("Error generating comments:", err);
         sendResponse({ success: false, error: err.message || String(err) });
       });
 
-    // Keep the message channel open for async response
-    return true;
+    return true; // async
   }
 
   if (message.type === "TEST_CONNECTION") {
@@ -19,20 +20,26 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         sendResponse({ success: false, error: err.message || String(err) });
       });
 
-    // Also async
-    return true;
+    return true; // async
   }
 });
 
-async function handleGenerateComments(postText) {
+async function handleGenerateComments(postText, bridgetMode) {
   const config = await getConfig();
 
   if (!config.apiKey) {
-    throw new Error("No API key set. Go to the extension options page to save one.");
+    throw new Error("No API key set. Open the extension options and add your OpenAI API key.");
   }
 
-  const tone =
-    config.tone || "helpful, practical, slightly witty, focused on SaaS founders";
+  let tone =
+    config.tone ||
+    "helpful, practical, slightly witty, focused on SaaS founders";
+
+  if (bridgetMode) {
+    tone =
+      "Bridget Willard's tone: warm, direct, slightly witty, practical, with clear takeaways for SaaS founders. Avoid jargon. Sound like a seasoned marketing consultant who actually does the work.";
+  }
+
   const count = config.count || 3;
   const model = config.model || "gpt-4o-mini";
 
@@ -52,12 +59,16 @@ They should:
 - Be relevant to the post.
 
 Return ONLY the comments, numbered.
-`.trim();
+  `.trim();
 
   const body = {
     model,
     messages: [
-      { role: "system", content: "You help write smart, authentic comments for SaaS founders' posts." },
+      {
+        role: "system",
+        content:
+          "You help write smart, authentic comments for SaaS founders' posts."
+      },
       { role: "user", content: prompt }
     ],
     temperature: 0.8
@@ -70,7 +81,7 @@ Return ONLY the comments, numbered.
   const lines = raw
     .split("\n")
     .map((line) => line.trim())
-    .filter((line) => line);
+    .filter(Boolean);
 
   const comments = lines
     .map((line) => line.replace(/^\d+[\).\s-]*/,"").trim())
@@ -84,7 +95,7 @@ Return ONLY the comments, numbered.
   return comments;
 }
 
-// Test connection with a tiny, cheap request
+// Tiny, cheap test call for the "Test connection" button
 async function handleTestConnection(apiKeyOverride, modelOverride) {
   const config = await getConfig();
 
@@ -98,7 +109,10 @@ async function handleTestConnection(apiKeyOverride, modelOverride) {
   const body = {
     model,
     messages: [
-      { role: "system", content: "You respond briefly with 'OK' for test requests." },
+      {
+        role: "system",
+        content: "You respond briefly with 'OK' for test requests."
+      },
       { role: "user", content: "Say OK." }
     ],
     max_tokens: 3,
@@ -115,21 +129,23 @@ async function handleTestConnection(apiKeyOverride, modelOverride) {
   };
 }
 
-// Shared fetch helper
+// Shared OpenAI fetch
 async function safeFetchOpenAI(apiKey, body) {
   let response;
   try {
     response = await fetch("https://api.openai.com/v1/chat/completions", {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${apiKey}`,
+        Authorization: `Bearer ${apiKey}`,
         "Content-Type": "application/json"
       },
       body: JSON.stringify(body)
     });
   } catch (networkErr) {
     console.error("Network error calling OpenAI:", networkErr);
-    throw new Error("Network error calling OpenAI. Check your internet connection and try again.");
+    throw new Error(
+      "Network error calling OpenAI. Check your internet connection and try again."
+    );
   }
 
   if (!response.ok) {
@@ -147,7 +163,8 @@ function getConfig() {
       {
         apiKey: "",
         model: "gpt-4o-mini",
-        tone: "helpful, practical, slightly witty, focused on SaaS founders",
+        tone:
+          "helpful, practical, slightly witty, focused on SaaS founders",
         count: 3
       },
       resolve

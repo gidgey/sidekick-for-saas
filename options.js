@@ -76,48 +76,44 @@ function testConnection() {
     return;
   }
 
- chrome.runtime.sendMessage(
-  {
-    type: "TEST_CONNECTION",
-    apiKey,
-    model
-  },
-  (response) => {
-    const testStatus = document.getElementById("testStatus");
+  chrome.runtime.sendMessage(
+    {
+      type: "TEST_CONNECTION",
+      apiKey,
+      model
+    },
+    (response) => {
+      if (chrome.runtime.lastError) {
+        const msg = chrome.runtime.lastError.message || "Unknown extension error.";
+        testStatus.textContent = `Extension error: ${msg}`;
+        testStatus.className = "error";
+        console.error("Test connection runtime error:", msg);
+        return;
+      }
 
-    // If the background script crashed or there was a messaging error
-    if (chrome.runtime.lastError) {
-      const msg = chrome.runtime.lastError.message || "Unknown extension error.";
-      testStatus.textContent = `Extension error: ${msg}`;
-      testStatus.className = "error";
-      console.error("Test connection runtime error:", msg);
-      return;
+      if (!response) {
+        const msg = "No response from background script.";
+        testStatus.textContent = msg;
+        testStatus.className = "error";
+        console.error("Test connection error:", msg);
+        return;
+      }
+
+      if (!response.success) {
+        const msg = response.error || "Unknown error testing connection.";
+        testStatus.textContent = makeFriendlyTestError(msg);
+        testStatus.className = "error";
+        console.error("Test connection error:", msg);
+        return;
+      }
+
+      const text =
+        response.message ||
+        `Connection successful using model ${response.modelUsed}.`;
+      testStatus.textContent = text;
+      testStatus.className = "success";
     }
-
-    if (!response) {
-      const msg = "No response from background script.";
-      testStatus.textContent = msg;
-      testStatus.className = "error";
-      console.error("Test connection error:", msg);
-      return;
-    }
-
-    if (!response.success) {
-      const msg = response.error || "Unknown error testing connection.";
-      testStatus.textContent = makeFriendlyTestError(msg);
-      testStatus.className = "error";
-      console.error("Test connection error:", msg);
-      return;
-    }
-
-    const text =
-      response.message ||
-      `Connection successful using model ${response.modelUsed}.`;
-    testStatus.textContent = text;
-    testStatus.className = "success";
-  }
-);
-
+  );
 }
 
 function makeFriendlyTestError(raw) {

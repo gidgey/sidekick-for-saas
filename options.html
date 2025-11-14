@@ -55,13 +55,13 @@
   </head>
   <body>
     <h1>Sidekick for SaaS – Settings</h1>
- 
+
     <label>
       OpenAI API Key
       <input type="password" id="apiKey" placeholder="sk-..." />
       <small>Stored locally via chrome.storage.sync.</small>
     </label>
- 
+
     <label>
       Model
       <select id="model">
@@ -70,25 +70,25 @@
       </select>
       <small>Select a model you have access to in your OpenAI account.</small>
     </label>
- 
+
     <label>
       Tone description
       <textarea id="tone" rows="3">helpful, practical, slightly witty, focused on SaaS founders</textarea>
     </label>
- 
+
     <label>
       Number of comment options
       <input type="text" id="count" value="3" />
     </label>
- 
+
     <div class="button-row">
       <button id="save">Save</button>
       <button id="testConnection" type="button">Test connection</button>
     </div>
- 
+
     <div id="status"></div>
     <div id="testStatus"></div>
- 
+
     <script src="options.js"></script>
   </body>
 </html>

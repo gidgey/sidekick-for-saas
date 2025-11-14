@@ -7,7 +7,6 @@
   --color-heading-brown: #4d1818;
 }
 
-/* Sidebar container */
 #sidekick-sidebar {
   position: fixed;
   top: 10%;
@@ -23,7 +22,6 @@
   flex-direction: column;
 }
 
-/* Header */
 .sidekick-header {
   padding: 8px 12px;
   border-bottom: 1px solid var(--color-banana);
@@ -37,7 +35,6 @@
   color: var(--color-heading-brown);
 }
 
-/* Body */
 .sidekick-body {
   padding: 8px 10px 10px;
   overflow-y: auto;
@@ -50,7 +47,6 @@
   margin-bottom: 8px;
 }
 
-/* Textarea */
 #sidekick-post-input {
   width: 100%;
   min-height: 80px;
@@ -62,7 +58,15 @@
   resize: vertical;
 }
 
-/* Buttons */
+.sidekick-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--color-heading-brown);
+  margin-bottom: 8px;
+}
+
 #sidekick-use-selection,
 #sidekick-generate {
   width: 100%;
@@ -74,14 +78,12 @@
   cursor: pointer;
 }
 
-/* Secondary button */
 #sidekick-use-selection {
   background: #ffffff;
   border: 1px solid var(--color-orange);
   color: var(--color-orange);
 }
 
-/* Primary button */
 #sidekick-generate {
   background: var(--color-mango);
   color: var(--color-smokey);
@@ -98,12 +100,10 @@
   margin-bottom: 6px;
 }
 
-/* Results */
 #sidekick-results {
   font-size: 12px;
 }
 
-/* Comment card */
 .sidekick-comment {
   border: 1px solid var(--color-banana);
   border-radius: 6px;
@@ -125,17 +125,30 @@
   color: var(--color-smokey);
 }
 
-/* Copy button */
-.sidekick-copy-btn {
+.sidekick-comment-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.sidekick-copy-btn,
+.sidekick-insert-btn {
   font-size: 11px;
   padding: 4px 8px;
   border: none;
   border-radius: 999px;
-  background: var(--color-pinkred);
   color: #ffffff;
   cursor: pointer;
 }
 
-.sidekick-copy-btn:hover {
+.sidekick-copy-btn {
+  background: var(--color-pinkred);
+}
+
+.sidekick-insert-btn {
+  background: var(--color-orange);
+}
+
+.sidekick-copy-btn:hover,
+.sidekick-insert-btn:hover {
   filter: brightness(0.95);
 }

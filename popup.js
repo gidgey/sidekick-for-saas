@@ -17,7 +17,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const tab = tabs[0];
       if (!tab || !tab.id) return;
 
-      // 1) Inject the content script into this tab
       chrome.scripting.executeScript(
         {
           target: { tabId: tab.id },
@@ -27,10 +26,8 @@ document.addEventListener("DOMContentLoaded", () => {
           const injectError = chrome.runtime.lastError;
           if (injectError) {
             console.warn("Error injecting content script:", injectError.message);
-            // We still try to send the message; if no listener, it will just no-op.
           }
 
-          // 2) Ask the content script to toggle the sidebar
           chrome.tabs.sendMessage(tab.id, { type: "TOGGLE_SIDEBAR" }, () => {
             const msgError = chrome.runtime.lastError;
             if (msgError) {

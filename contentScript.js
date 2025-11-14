@@ -1,7 +1,6 @@
 // contentScript.js
 
 (function () {
-  // Make sure we don't double-inject logic
   if (window.__sidekickInjected) return;
   window.__sidekickInjected = true;
 
@@ -24,6 +23,10 @@
           3. Click "Generate comments".
         </p>
         <textarea id="sidekick-post-input" placeholder="Selected post text will appear here..."></textarea>
+        <label class="sidekick-toggle">
+          <input type="checkbox" id="sidekick-bridget-mode" checked />
+          Rewrite like Bridget
+        </label>
         <button id="sidekick-use-selection">Use selected post</button>
         <button id="sidekick-generate">Generate comments</button>
         <div id="sidekick-status"></div>
@@ -56,11 +59,14 @@
         return;
       }
 
+      const bridgetModeCheckbox = sidebar.querySelector("#sidekick-bridget-mode");
+      const bridgetMode = bridgetModeCheckbox ? bridgetModeCheckbox.checked : false;
+
       setStatus("Generating comments...");
       setResults("");
 
       chrome.runtime.sendMessage(
-        { type: "GENERATE_COMMENTS", postText: text },
+        { type: "GENERATE_COMMENTS", postText: text, bridgetMode },
         (response) => {
           if (chrome.runtime.lastError) {
             const msg = chrome.runtime.lastError.message || "Extension error.";
@@ -107,13 +113,15 @@
     const html = comments
       .map((c, i) => {
         const escaped = escapeHtml(c);
+        const encoded = encodeURIComponent(c);
         return `
           <div class="sidekick-comment">
             <div class="sidekick-comment-index">Option ${i + 1}</div>
             <div class="sidekick-comment-text">${escaped}</div>
-            <button class="sidekick-copy-btn" data-comment="${encodeURIComponent(
-              c
-            )}">Copy</button>
+            <div class="sidekick-comment-actions">
+              <button class="sidekick-copy-btn" data-comment="${encoded}">Copy</button>
+              <button class="sidekick-insert-btn" data-comment="${encoded}">Insert</button>
+            </div>
           </div>
         `;
       })
@@ -134,6 +142,17 @@
           );
         });
       });
+
+    sidebarEl
+      .querySelectorAll(".sidekick-insert-btn")
+      .forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const comment = decodeURIComponent(
+            btn.getAttribute("data-comment") || ""
+          );
+          insertIntoReplyBox(comment);
+        });
+      });
   }
 
   function escapeHtml(str) {
@@ -149,7 +168,6 @@
     return text || "";
   }
 
-  // Friendlier error messages for API responses
   function makeFriendlyError(raw) {
     const lower = String(raw).toLowerCase();
 
@@ -178,28 +196,60 @@
     return raw;
   }
 
-  // Listen for toggle requests from popup
-  chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  function insertIntoReplyBox(text) {
+    // X / Twitter reply composer (best effort)
+    let el =
+      document.querySelector('div[role="textbox"][data-testid="tweetTextarea_0"]') ||
+      document.querySelector('div[role="textbox"][data-testid="tweetTextarea_1"]');
+
+    // Fallback: focused contenteditable or any textbox
+    if (!el) {
+      el = document.activeElement;
+      if (!(el && el.getAttribute && el.getAttribute("contenteditable") === "true")) {
+        el = document.querySelector('div[contenteditable="true"][role="textbox"]');
+      }
+    }
+
+    if (!el) {
+      setStatus("Couldn't find the reply box. Try copying instead.");
+      return;
+    }
+
+    el.focus();
+
+    if (el.tagName === "INPUT" || el.tagName === "TEXTAREA") {
+      el.value = text;
+    } else {
+      el.textContent = text;
+    }
+
+    const selection = window.getSelection();
+    const range = document.createRange();
+    range.selectNodeContents(el);
+    range.collapse(false);
+    selection.removeAllRanges();
+    selection.addRange(range);
+
+    setStatus("Inserted into reply box.");
+  }
+
+  // Listen for popup toggle
+  chrome.runtime.onMessage.addListener((message) => {
     if (message.type === "TOGGLE_SIDEBAR") {
       toggleSidebar();
     }
   });
 
   function toggleSidebar() {
-    // If it doesn't exist yet, create it (and show it)
     if (!sidebarEl || !document.body.contains(sidebarEl)) {
       createSidebar();
       return;
     }
 
-    // Otherwise toggle visibility
     if (sidebarEl.style.display === "none") {
       sidebarEl.style.display = "";
     } else {
       sidebarEl.style.display = "none";
     }
   }
-
-  // NOTE: we do NOT call createSidebar() here.
-  // Sidebar appears only when the popup sends TOGGLE_SIDEBAR.
 })();
