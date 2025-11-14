@@ -1,0 +1,11 @@
+# Contributing to Sidekick for SaaS
+
+Thanks for your interest in contributing!
+
+## How to contribute
+
+1. Fork the repository
+2. Create a new branch:
+
+   ```bash
+   git checkout -b feature/my-feature

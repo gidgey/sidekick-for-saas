@@ -1,0 +1,12 @@
+# Changelog
+
+## 0.1.0 – Initial public version
+
+- First release of Sidekick for SaaS
+- Sidebar on X and LinkedIn
+- “Use selected post” + “Generate comments”
+- Copy and Insert actions for each suggestion
+- “Rewrite like Bridget” toggle
+- Options page with model dropdown and tone settings
+- “Test connection” button with friendly error messages
+- Icon + promo assets for Chrome Web Store
